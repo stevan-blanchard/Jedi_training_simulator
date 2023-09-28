@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using Unity.XR.OpenVR;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.XR.Interaction.Toolkit;
 using Vector3 = UnityEngine.Vector3;
 
 public class Lightsaber : MonoBehaviour
@@ -13,7 +15,10 @@ public class Lightsaber : MonoBehaviour
     public AudioClip down;
     public AudioClip hum;
     public AudioClip moving;
+
+
     Rigidbody rb;
+
     public void ActiveOnOff()
     {
         active = !active;
@@ -33,6 +38,7 @@ public class Lightsaber : MonoBehaviour
         //source.volume = 1f;
         rb = GetComponent<Rigidbody>();
         source = gameObject.AddComponent<AudioSource>();
+        source.spatialBlend = 1 ;
         foreach (Blade blade in blades) {
             blade.Showblade(false);
         }
@@ -40,6 +46,8 @@ public class Lightsaber : MonoBehaviour
 
     public void Update()
     {
+
+
         if (active)
         {
             foreach (Blade blade in blades)
@@ -51,8 +59,7 @@ public class Lightsaber : MonoBehaviour
                 }
                 
             }
-            Debug.Log(rb.velocity);
-            if (rb.velocity.magnitude > 6)
+            if (!source.isPlaying && rb.angularVelocity.magnitude > 6)
             {
                 source.PlayOneShot(moving);
             }
