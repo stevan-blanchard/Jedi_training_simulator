@@ -2110,7 +2110,7 @@
             "id": "0e48d2ed-59c7-4f0a-a7a7-a4ada20690b1",
             "actions": [
                 {
-                    "name": "device Velocity",
+                    "name": "Left_A_velocity",
                     "type": "Value",
                     "id": "63bfe01c-88f4-48ae-be62-833df63f172f",
                     "expectedControlType": "Vector3",
@@ -2119,46 +2119,35 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "New action",
-                    "type": "Button",
+                    "name": "Right_A_velocity",
+                    "type": "Value",
                     "id": "e0727215-2999-4052-a108-654e6598f67d",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "Vector3",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
                 {
                     "name": "",
                     "id": "38163e5e-cc31-4b53-b269-adbc3c987b80",
-                    "path": "<XRController>{LeftHand}/deviceVelocity",
+                    "path": "<XRController>{LeftHand}/deviceAngularVelocity",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "device Velocity",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "9663e5e3-291d-491a-ade4-02fb06282082",
-                    "path": "<XRController>{RightHand}/deviceVelocity",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "device Velocity",
+                    "action": "Left_A_velocity",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
                     "id": "37b54bfa-7d50-4c86-8e7e-8c40a4139e8f",
-                    "path": "",
+                    "path": "<XRController>{RightHand}/deviceAngularVelocity",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "New action",
+                    "action": "Right_A_velocity",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
