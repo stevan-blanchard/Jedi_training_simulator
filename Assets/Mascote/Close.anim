@@ -5356,9 +5356,16 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0
-    functionName: Close_sound
+    functionName: CloseSound
     data: 
     objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0
+    functionName: CanShoot
+    data: 
+    objectReferenceParameter: {fileID: 11500000, guid: bed7e92700f4da24987ee599d718d5d3, type: 3}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0

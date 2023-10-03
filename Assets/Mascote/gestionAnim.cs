@@ -13,6 +13,8 @@ public class gestionAnim : MonoBehaviour
     public AudioClip sound_deploy;
     public AudioClip sound_close;
 
+    public bool canShoot;
+
     public void Start()
     {
         source = gameObject.AddComponent<AudioSource>();
@@ -30,24 +32,28 @@ public class gestionAnim : MonoBehaviour
         }
     }
 
-    public void Tir_sound() { 
+    public void CanShoot(int value)
+    {
+        canShoot = value == 1;
+    }
+
+    public void TirSound() { 
 
         source.PlayOneShot(sound_tir);
 
     }
 
-    public void Deploy_sound()
+    public void DeploySound()
     {
-        Debug.Log("DEPLOIEMENT");
         source.PlayOneShot(sound_deploy);
     }
 
-    public void Mov_sound()
+    public void MovSound()
     {
         source.PlayOneShot(sound_mov);
     }
 
-    public void Close_sound()
+    public void CloseSound()
     {
         source.PlayOneShot(sound_close);
     }

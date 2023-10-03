@@ -1333,7 +1333,7 @@ AnimationClip:
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 0.8333334
+    m_StopTime: 1.8333334
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -5932,9 +5932,16 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0
-    functionName: Deploy_sound
+    functionName: DeploySound
     data: 
     objectReferenceParameter: {fileID: 11500000, guid: bed7e92700f4da24987ee599d718d5d3, type: 3}
     floatParameter: 0
     intParameter: 0
+    messageOptions: 0
+  - time: 1.8333334
+    functionName: CanShoot
+    data: 
+    objectReferenceParameter: {fileID: 11500000, guid: bed7e92700f4da24987ee599d718d5d3, type: 3}
+    floatParameter: 0
+    intParameter: 1
     messageOptions: 0

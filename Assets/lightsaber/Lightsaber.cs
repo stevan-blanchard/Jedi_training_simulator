@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using Vector3 = UnityEngine.Vector3;
 
@@ -14,6 +13,7 @@ public class Lightsaber : MonoBehaviour
     public AudioClip down;
     public AudioClip hum;
     public AudioClip moving;
+    public List<AudioClip> DeflectSound;
 
     private Lightsaber_grab_interacteble lightsaber_Grab_Interacteble;
     public void ActiveOnOff()
@@ -36,6 +36,7 @@ public class Lightsaber : MonoBehaviour
         sourceprincipale = gameObject.AddComponent<AudioSource>();
         sourcesecondaire = gameObject.AddComponent<AudioSource>();
         sourceprincipale.spatialBlend = 1 ;
+        sourcesecondaire.spatialBlend = 1 ;
         foreach (Blade blade in blades) {
             blade.Showblade(false);
         }
@@ -83,5 +84,10 @@ public class Lightsaber : MonoBehaviour
                 }
             }
         }
+    }
+
+    internal void Deflect()
+    {
+        sourceprincipale.PlayOneShot(DeflectSound[Random.Range(0,3)]);
     }
 }
