@@ -1,3 +1,5 @@
+using Dreamteck.Splines;
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
@@ -12,6 +14,7 @@ public class MarkAI: MonoBehaviour
     public List<GameObject> Barrel_transform;
     public GameObject Bulet;
 
+
     private readonly int _reloadtime = 2;
     private readonly int _bulllet_speed = 500;
     private float shoottime;
@@ -19,13 +22,17 @@ public class MarkAI: MonoBehaviour
     private readonly float _min = -0.25f;
     private readonly float _max = 0.25f;
 
-    gestionAnim anim;
+    private bool ismoving ;
+
+    private gestionAnim anim;
+    private SplineFollower follower;
     // Start is called before the first frame update
     public void Start()
     {
-
+        ismoving = true;
         shoottime = _reloadtime;
         anim = GetComponent<gestionAnim>();
+        follower = GetComponent<SplineFollower>();
     }
     // Update is called once per frame
     void Update()
@@ -38,7 +45,26 @@ public class MarkAI: MonoBehaviour
 
             barrel.transform.LookAt(target.transform.position + new Vector3(xNoise,yNoise,zNoise));
         }
-        ShootLV1();
+        
+        
+        if (!ismoving)
+        {
+            ShootLV1();
+        }
+        else
+        {
+            Deplacement();
+        }
+
+
+
+    }
+
+    private void Deplacement()
+    {
+        int movingspeed = Random.Range(-5, 5);
+        follower.followSpeed = movingspeed;
+
     }
 
     public void ShootLV1() {
@@ -59,6 +85,11 @@ public class MarkAI: MonoBehaviour
         anim.Ready(false);
 
         shoottime = _reloadtime;
+    }
+
+    public void SetIsMoving(bool ismoving)
+    {
+        this.ismoving = ismoving;
     }
 
     
