@@ -15,21 +15,29 @@ public class MarkAI: MonoBehaviour
     public GameObject Bulet;
 
 
-    private readonly int _reloadtime = 2;
-    private readonly int _bulllet_speed = 500;
+    private readonly int _reloadtime = 1;
+    public int bulllet_speed;
     private float shoottime;
 
     private readonly float _min = -0.25f;
     private readonly float _max = 0.25f;
 
     private bool ismoving ;
+    private bool speedAffected = false;
+    private int movingspeed;
+    private float movingtime;
 
     private gestionAnim anim;
     private SplineFollower follower;
+    private bool waitbeforeremoving;
+    private float waitbeforeremovingtime = 4;
+    private float waitbeforeremovingtimeremaining;
+
     // Start is called before the first frame update
     public void Start()
     {
         ismoving = true;
+        waitbeforeremoving = true;
         shoottime = _reloadtime;
         anim = GetComponent<gestionAnim>();
         follower = GetComponent<SplineFollower>();
@@ -45,25 +53,63 @@ public class MarkAI: MonoBehaviour
 
             barrel.transform.LookAt(target.transform.position + new Vector3(xNoise,yNoise,zNoise));
         }
-        
-        
-        if (!ismoving)
+
+
+        if (ismoving)
         {
-            ShootLV1();
+            MovingPhase();
+
+        }
+        else if(waitbeforeremoving)
+        {
+            waitbeforeremovingtimeremaining -= Time.deltaTime;
+            if (waitbeforeremovingtimeremaining > 0)
+            {
+                return;
+            }
+            else
+            { 
+                waitbeforeremoving = false;
+                ismoving = true;
+                waitbeforeremovingtimeremaining = waitbeforeremovingtime;
+            }
         }
         else
         {
-            Deplacement();
-        }
+            ShootLV1();
+            
 
+        }
 
 
     }
 
-    private void Deplacement()
+    private void MovingPhase()
     {
-        int movingspeed = Random.Range(-5, 5);
-        follower.followSpeed = movingspeed;
+
+
+        if (!speedAffected)
+        {
+            movingspeed = Random.Range(-2, 2);
+            while (movingspeed == 0)
+            { // on evite d'avoir une speed de 0
+            movingspeed = Random.Range(-2, 2);
+            }
+
+            anim.MovSound();
+            movingtime = Random.Range(2, 5);
+            speedAffected = true;
+            follower.followSpeed = movingspeed;
+        }
+        movingtime -= Time.deltaTime;
+        if (movingtime > 0){ return; }
+        else
+        {
+
+            follower.followSpeed = 0;
+            ismoving = false;
+            speedAffected = false;
+        }
 
     }
 
@@ -79,11 +125,14 @@ public class MarkAI: MonoBehaviour
         anim.TirSound();
         GameObject bulletobj = Instantiate(Bulet, Barrel_transform[barrelshooter].transform.position,
             Barrel_transform[barrelshooter].transform.rotation) as GameObject;
+        bulletobj.GetComponent<bullet_script>().sender = gameObject;
         Rigidbody bulletrigid = bulletobj.GetComponent<Rigidbody>();
-        bulletrigid.AddForce(bulletrigid.transform.forward * _bulllet_speed);
+        bulletrigid.AddForce(bulletrigid.transform.forward * bulllet_speed);
         Destroy(bulletobj, 10f);
-        anim.Ready(false);
 
+
+        anim.Ready(false);
+        waitbeforeremoving = true;
         shoottime = _reloadtime;
     }
 

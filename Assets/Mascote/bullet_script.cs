@@ -7,6 +7,8 @@ using static UnityEngine.ParticleSystem;
 public class bullet_script : MonoBehaviour
 {
     public ParticleSystem deflecteffect;
+    public GameObject sender;
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.name.Equals("Main Camera"))
@@ -23,6 +25,7 @@ public class bullet_script : MonoBehaviour
             try
             {
                 other.gameObject.transform.parent.GetComponent<Lightsaber>().Deflect(); //on essaye de jouer le deflect
+                GetComponent<Rigidbody>().velocity = GetComponent<Rigidbody>().velocity*-1;
             }
             catch { }//j'ai pas besoins de faire qqc de spéciale
         }
