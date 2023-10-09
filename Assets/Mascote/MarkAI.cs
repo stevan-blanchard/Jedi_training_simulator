@@ -30,7 +30,7 @@ public class MarkAI: MonoBehaviour
     private gestionAnim anim;
     private SplineFollower follower;
     private bool waitbeforeremoving;
-    private float waitbeforeremovingtime = 4;
+    private float waitbeforeremovingtime = 2;
     private float waitbeforeremovingtimeremaining;
 
     // Start is called before the first frame update
@@ -46,6 +46,7 @@ public class MarkAI: MonoBehaviour
     void Update()
     {
         transform.LookAt(player.transform.position); //mark regardera toujour le joueur
+        
         foreach (GameObject barrel in Barrel_transform) {//on ajoute un peut d'aléatoire a nos tir
             float xNoise = Random.Range(_min, _max);
             float yNoise = Random.Range(_min, _max);
@@ -80,7 +81,7 @@ public class MarkAI: MonoBehaviour
             
 
         }
-
+        
 
     }
 
