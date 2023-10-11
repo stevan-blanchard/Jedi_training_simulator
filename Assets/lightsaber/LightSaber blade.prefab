@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 8063327794648993758}
   m_Layer: 7
   m_Name: LightSaber blade
-  m_TagString: Untagged
+  m_TagString: Lightsaber
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

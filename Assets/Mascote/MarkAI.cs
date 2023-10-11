@@ -6,11 +6,11 @@ using System.Threading;
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.XR.Interaction.Toolkit;
+using static Unity.VisualScripting.Member;
 
-public class MarkAI: MonoBehaviour
+public class MarkAI : MonoBehaviour
 {
-    public GameObject player;
-    public GameObject target;
+    private GameObject target;
     public List<GameObject> Barrel_transform;
     public GameObject Bulet;
 
@@ -22,7 +22,7 @@ public class MarkAI: MonoBehaviour
     private readonly float _min = -0.25f;
     private readonly float _max = 0.25f;
 
-    private bool ismoving ;
+    private bool ismoving;
     private bool speedAffected = false;
     private int movingspeed;
     private float movingtime;
@@ -33,9 +33,14 @@ public class MarkAI: MonoBehaviour
     private float waitbeforeremovingtime = 2;
     private float waitbeforeremovingtimeremaining;
 
+    public ParticleSystem explosion;
+    private bool isdead;
+    private bool markready;
+
     // Start is called before the first frame update
-    public void Start()
+    public void Awake()
     {
+        this.target = GameObject.Find("Target");
         ismoving = true;
         waitbeforeremoving = true;
         shoottime = _reloadtime;
@@ -45,43 +50,51 @@ public class MarkAI: MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.LookAt(player.transform.position); //mark regardera toujour le joueur
-        
-        foreach (GameObject barrel in Barrel_transform) {//on ajoute un peut d'aléatoire a nos tir
-            float xNoise = Random.Range(_min, _max);
-            float yNoise = Random.Range(_min, _max);
-            float zNoise = Random.Range(_min, _max);
 
-            barrel.transform.LookAt(target.transform.position + new Vector3(xNoise,yNoise,zNoise));
-        }
-
-
-        if (ismoving)
+        if (!markready)
         {
-            MovingPhase();
-
+            return;
         }
-        else if(waitbeforeremoving)
+        if (!isdead)
         {
-            waitbeforeremovingtimeremaining -= Time.deltaTime;
-            if (waitbeforeremovingtimeremaining > 0)
+            gameObject.transform.LookAt(target.transform.position); //mark regardera toujour le joueur
+
+            foreach (GameObject barrel in Barrel_transform)
+            {//on ajoute un peut d'aléatoire a nos tir
+                float xNoise = Random.Range(_min, _max);
+                float yNoise = Random.Range(_min, _max);
+                float zNoise = Random.Range(_min, _max);
+
+                barrel.transform.LookAt(target.transform.position + new Vector3(xNoise, yNoise, zNoise));
+            }
+
+
+            if (ismoving)
             {
-                return;
+                MovingPhase();
+
+            }
+            else if (waitbeforeremoving)
+            {
+                waitbeforeremovingtimeremaining -= Time.deltaTime;
+                if (waitbeforeremovingtimeremaining > 0)
+                {
+                    return;
+                }
+                else
+                {
+                    waitbeforeremoving = false;
+                    ismoving = true;
+                    waitbeforeremovingtimeremaining = waitbeforeremovingtime;
+                }
             }
             else
-            { 
-                waitbeforeremoving = false;
-                ismoving = true;
-                waitbeforeremovingtimeremaining = waitbeforeremovingtime;
+            {
+                ShootLV1();
+
+
             }
         }
-        else
-        {
-            ShootLV1();
-            
-
-        }
-        
 
     }
 
@@ -94,7 +107,7 @@ public class MarkAI: MonoBehaviour
             movingspeed = Random.Range(-2, 2);
             while (movingspeed == 0)
             { // on evite d'avoir une speed de 0
-            movingspeed = Random.Range(-2, 2);
+                movingspeed = Random.Range(-2, 2);
             }
 
             anim.MovSound();
@@ -103,7 +116,7 @@ public class MarkAI: MonoBehaviour
             follower.followSpeed = movingspeed;
         }
         movingtime -= Time.deltaTime;
-        if (movingtime > 0){ return; }
+        if (movingtime > 0) { return; }
         else
         {
 
@@ -114,13 +127,14 @@ public class MarkAI: MonoBehaviour
 
     }
 
-    public void ShootLV1() {
+    public void ShootLV1()
+    {
         shoottime -= Time.deltaTime;
         if (shoottime > 0) { return; }
 
         anim.Ready(true);
         if (!anim.canShoot) { return; } //attent l'animation
-       
+
 
         int barrelshooter = (int)(Random.value * 3);
         anim.TirSound();
@@ -142,5 +156,36 @@ public class MarkAI: MonoBehaviour
         this.ismoving = ismoving;
     }
 
-    
+    public void ready()
+    {
+        markready = true;
+
+    }
+
+    public void Explose()
+    {
+        Instantiate(explosion, transform.position, Quaternion.identity);
+        explosion.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+        explosion.Emit(100);
+        follower.enabled = false;
+        isdead = true;
+        gameObject.GetComponent<Rigidbody>().useGravity = true;
+        Destroy(gameObject, 3f);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Bullet"))
+        {
+            Debug.Log("Mark touché");
+            Explose();
+            Destroy(other.gameObject);
+            anim.DieSound();
+        }
+        else if (other.gameObject.CompareTag("Lightsaber")) {
+            Debug.Log("Mark touché");
+            Explose();
+            anim.DieSound();
+        }
+    }
 }

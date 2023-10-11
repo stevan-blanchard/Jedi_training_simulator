@@ -12,7 +12,7 @@ public class gestionAnim : MonoBehaviour
     public AudioClip sound_mov;
     public AudioClip sound_deploy;
     public AudioClip sound_close;
-
+    public AudioClip sound_die;
     public bool canShoot;
 
     public void Start()
@@ -56,5 +56,9 @@ public class gestionAnim : MonoBehaviour
     public void CloseSound()
     {
         source.PlayOneShot(sound_close);
+    }
+    public void DieSound()
+    {
+        source.PlayOneShot(sound_die);
     }
 }
