@@ -1,6 +1,7 @@
 using Dreamteck.Splines;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Spawnscenario : MonoBehaviour
@@ -12,14 +13,21 @@ public class Spawnscenario : MonoBehaviour
 
     public List<int> dificultyMultiplicator;
     public List<int> maxAlivePerDificulty;
+    public List<int> countPerDifficulty;
 
     [SerializeField]
     public GameObject spawnobjectPrefab;
+
+    public GameObject placemarker;
+    public GameObject playzone;
 
     private int dificulty; //between 0 and 3; 
     private float waitBeforSpawn;
     private bool difficultyset;
     private int numofmark;
+    private int totalMark;
+    private bool player_placed;
+
 
     // Start is called before the first frame update
     void Start()
@@ -32,23 +40,50 @@ public class Spawnscenario : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-        numofmark = GameObject.FindGameObjectsWithTag("Marksman").Length;
-        
+        if (placemarker.GetComponent<start_round>().playerIn)
+        {
+            placemarker.GetComponent<start_round>().playerIn = false;
+            player_placed = true;
+            totalMark = 0;
+        }
 
-        if (difficultyset) {
+        numofmark = GameObject.FindGameObjectsWithTag("Marksman").Length;
+
+        if (difficultyset)
+        {
+            placemarker.SetActive(true);
+        }
+        if(totalMark >= countPerDifficulty[dificulty] && numofmark ==0) 
+        {
+            Win();
+        }
+
+
+        if (player_placed) {
+            playzone.SetActive(true);
+            placemarker.SetActive(false);
             waitBeforSpawn -= Time.deltaTime;
             if (waitBeforSpawn > 0)
             {
                 return;
+
             }
-            if (numofmark < maxAlivePerDificulty[dificulty]) {
+            if (numofmark < maxAlivePerDificulty[dificulty] && !(totalMark == countPerDifficulty[dificulty])) {
                 SpawnMark();
-                initialSpawnTimeInterval =- decreaseInterval;
-                waitBeforSpawn = initialSpawnTimeInterval;
+                initialSpawnTimeInterval -= decreaseInterval;
+                if (initialSpawnTimeInterval < minimalSpawnTimeInterval)
+                { waitBeforSpawn = minimalSpawnTimeInterval; }
+                else
+                { waitBeforSpawn = initialSpawnTimeInterval; }
             }
         }
+    }
 
+    private void Win()
+    {
+        player_placed = false;
+        difficultyset = false;
+        playzone.SetActive(false);
     }
 
     public void InitialiseDificulty(int dificulty)
@@ -62,6 +97,7 @@ public class Spawnscenario : MonoBehaviour
     public void SpawnMark()
     {
         GameObject newmark = Instantiate(spawnobjectPrefab);
-        newmark.GetComponent<SplineFollower>().spline = spawnerlist[Random.Range(0, 1)];
+        newmark.GetComponent<SplineFollower>().spline = spawnerlist[Random.Range(0, 2)];
+        totalMark++;
         }
 }

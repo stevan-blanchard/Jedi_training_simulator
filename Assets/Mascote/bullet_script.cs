@@ -12,7 +12,7 @@ public class bullet_script : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.name.Equals("Main Camera"))
+        if (other.gameObject.CompareTag("MainCamera"))
         {
             Debug.Log("Touché");
             Destroy(gameObject);

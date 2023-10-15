@@ -520,7 +520,7 @@ MonoBehaviour:
         m_MethodName: set_spline
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 6654611794556527822, guid: 423779ce44e8307478f4aac7921cfdcb, type: 3}
+          m_ObjectArgument: {fileID: 7616516854992295660, guid: 47d00ce02120f054f95a8be9359a7dcc, type: 3}
           m_ObjectArgumentAssemblyTypeName: Dreamteck.Splines.SplineComputer, Dreamteck.Splines
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -568,7 +568,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!4 &8859337229834813389 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1e0ea55baf685554da367a974eeefab7, type: 3}

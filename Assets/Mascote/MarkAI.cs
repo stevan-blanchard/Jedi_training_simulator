@@ -175,6 +175,7 @@ public class MarkAI : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("name : "+other.name +" tag : "+ other.tag);
         if (other.gameObject.CompareTag("Bullet"))
         {
             Debug.Log("Mark touché");
