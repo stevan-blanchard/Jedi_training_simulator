@@ -32,6 +32,9 @@ public class Spawnscenario : MonoBehaviour
     public AudioClip sound_zone;
     private bool soundplayed;
 
+    public SplineComputer circlepath;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -40,6 +43,8 @@ public class Spawnscenario : MonoBehaviour
         numofmark = 0;
         source = gameObject.AddComponent<AudioSource>();
         source.spatialBlend = 1;
+
+
     }
 
     // Update is called once per frame
@@ -106,6 +111,7 @@ public class Spawnscenario : MonoBehaviour
     {
         GameObject newmark = Instantiate(spawnobjectPrefab);
         newmark.GetComponent<SplineFollower>().spline = spawnerlist[Random.Range(0, 2)];
+        newmark.GetComponent<MarkAI>().circlepath = circlepath;
         totalMark++;
         }
 }
