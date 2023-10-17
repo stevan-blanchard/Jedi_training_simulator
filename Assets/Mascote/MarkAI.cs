@@ -37,6 +37,7 @@ public class MarkAI : MonoBehaviour
     private bool isdead;
     private bool markready;
 
+    public SplineComputer circlepath;
     // Start is called before the first frame update
     public void Awake()
     {
@@ -189,4 +190,11 @@ public class MarkAI : MonoBehaviour
             anim.DieSound();
         }
     }
+
+    public void Followcircle()
+    {
+        follower.spline = circlepath;
+    }
+
+
 }

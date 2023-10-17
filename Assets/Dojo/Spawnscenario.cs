@@ -28,6 +28,12 @@ public class Spawnscenario : MonoBehaviour
     private int totalMark;
     private bool player_placed;
 
+    private AudioSource source;
+    public AudioClip sound_zone;
+    private bool soundplayed;
+
+    public SplineComputer circlepath;
+
 
     public int bullet_received;
     // nombre de balles pouvant atteindre 
@@ -40,9 +46,13 @@ public class Spawnscenario : MonoBehaviour
         difficultyset = false;
         waitBeforSpawn = 0;
         numofmark = 0;
+        pointsDeVie
 
         bullet_received = 0;
         admissible_bullets = 5;
+
+        source = gameObject.AddComponent<AudioSource>();
+        source.spatialBlend = 1;
     }
 
     // Update is called once per frame
@@ -75,6 +85,8 @@ public class Spawnscenario : MonoBehaviour
         if (player_placed) {
             Debug.Log("Placeeee");
             playzone.SetActive(true);
+            if (!soundplayed) { source.PlayOneShot(sound_zone); soundplayed = true; }
+            
             placemarker.SetActive(false);
             waitBeforSpawn -= Time.deltaTime;
             if (waitBeforSpawn > 0)
@@ -98,6 +110,7 @@ public class Spawnscenario : MonoBehaviour
         player_placed = false;
         difficultyset = false;
         playzone.SetActive(false);
+        soundplayed = false;
     }
 
     public void InitialiseDificulty(int dificulty)
@@ -112,6 +125,7 @@ public class Spawnscenario : MonoBehaviour
     {
         GameObject newmark = Instantiate(spawnobjectPrefab);
         newmark.GetComponent<SplineFollower>().spline = spawnerlist[Random.Range(0, 2)];
+        newmark.GetComponent<MarkAI>().circlepath = circlepath;
         totalMark++;
         }
 
