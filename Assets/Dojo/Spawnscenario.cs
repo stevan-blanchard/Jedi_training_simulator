@@ -29,12 +29,20 @@ public class Spawnscenario : MonoBehaviour
     private bool player_placed;
 
 
+    public int bullet_received;
+    // nombre de balles pouvant atteindre 
+    // le joueur avant de relancer la partie
+    private int admissible_bullets; 
+
     // Start is called before the first frame update
     void Start()
     {
         difficultyset = false;
         waitBeforSpawn = 0;
         numofmark = 0;
+
+        bullet_received = 0;
+        admissible_bullets = 5;
     }
 
     // Update is called once per frame
@@ -58,8 +66,14 @@ public class Spawnscenario : MonoBehaviour
             Win();
         }
 
+        if(bullet_received >= admissible_bullets) {
+            Debug.Log("Looooser");
+            RestartGame();
+        }
+
 
         if (player_placed) {
+            Debug.Log("Placeeee");
             playzone.SetActive(true);
             placemarker.SetActive(false);
             waitBeforSpawn -= Time.deltaTime;
@@ -100,4 +114,21 @@ public class Spawnscenario : MonoBehaviour
         newmark.GetComponent<SplineFollower>().spline = spawnerlist[Random.Range(0, 2)];
         totalMark++;
         }
+
+    private void RestartGame()
+    {
+        bullet_received = 0;
+        totalMark = 0;
+
+
+        foreach (GameObject mark in GameObject.FindGameObjectsWithTag("Marksman")) {
+            Destroy(mark);
+        }
+        player_placed = false;
+        playzone.SetActive(false);
+        difficultyset = false;
+        placemarker.SetActive(false);
+
+        waitBeforSpawn = initialSpawnTimeInterval;
+    }
 }
