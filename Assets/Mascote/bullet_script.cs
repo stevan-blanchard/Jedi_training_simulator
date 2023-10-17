@@ -14,7 +14,7 @@ public class bullet_script : MonoBehaviour
     {
         if (other.gameObject.CompareTag("MainCamera"))
         {
-            Debug.Log("Touch�");
+            Debug.Log("Touché");
             Destroy(gameObject);
 
             FindObjectOfType<Spawnscenario>().bullet_received++;

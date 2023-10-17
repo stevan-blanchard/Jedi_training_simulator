@@ -46,7 +46,6 @@ public class Spawnscenario : MonoBehaviour
         difficultyset = false;
         waitBeforSpawn = 0;
         numofmark = 0;
-        pointsDeVie
 
         bullet_received = 0;
         admissible_bullets = 5;
@@ -83,7 +82,6 @@ public class Spawnscenario : MonoBehaviour
 
 
         if (player_placed) {
-            Debug.Log("Placeeee");
             playzone.SetActive(true);
             if (!soundplayed) { source.PlayOneShot(sound_zone); soundplayed = true; }
             
