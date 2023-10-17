@@ -28,6 +28,9 @@ public class Spawnscenario : MonoBehaviour
     private int totalMark;
     private bool player_placed;
 
+    private AudioSource source;
+    public AudioClip sound_zone;
+    private bool soundplayed;
 
     // Start is called before the first frame update
     void Start()
@@ -35,6 +38,8 @@ public class Spawnscenario : MonoBehaviour
         difficultyset = false;
         waitBeforSpawn = 0;
         numofmark = 0;
+        source = gameObject.AddComponent<AudioSource>();
+        source.spatialBlend = 1;
     }
 
     // Update is called once per frame
@@ -61,6 +66,8 @@ public class Spawnscenario : MonoBehaviour
 
         if (player_placed) {
             playzone.SetActive(true);
+            if (!soundplayed) { source.PlayOneShot(sound_zone); soundplayed = true; }
+            
             placemarker.SetActive(false);
             waitBeforSpawn -= Time.deltaTime;
             if (waitBeforSpawn > 0)
@@ -84,6 +91,7 @@ public class Spawnscenario : MonoBehaviour
         player_placed = false;
         difficultyset = false;
         playzone.SetActive(false);
+        soundplayed = false;
     }
 
     public void InitialiseDificulty(int dificulty)
