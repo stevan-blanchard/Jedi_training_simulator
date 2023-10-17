@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Unity.XR.OpenVR;
 using UnityEngine;
 using Vector3 = UnityEngine.Vector3;
 
@@ -8,31 +7,36 @@ public class Lightsaber : MonoBehaviour
     public bool active = false;
     public Color blade_color;
     public List<Blade> blades; // base de(s) la lame(s) 
-    private AudioSource source;
+    private AudioSource sourceprincipale;
+    private AudioSource sourcesecondaire;
     public AudioClip up;
     public AudioClip down;
     public AudioClip hum;
     public AudioClip moving;
-    Rigidbody rb;
+    public List<AudioClip> DeflectSound;
+
+    private Lightsaber_grab_interacteble lightsaber_Grab_Interacteble;
     public void ActiveOnOff()
     {
         active = !active;
 
-        if(active) {
-            source.PlayOneShot(up);
-        }
-        else
+        if(active) 
         {
-            source.PlayOneShot(down);
+            sourceprincipale.PlayOneShot(up);
+        }
+        else 
+        {
+            sourceprincipale.PlayOneShot(down);
         }
 
     }
-
-    public void Start()
+    public void Start() 
     {
-        //source.volume = 1f;
-        rb = GetComponent<Rigidbody>();
-        source = gameObject.AddComponent<AudioSource>();
+        lightsaber_Grab_Interacteble = GetComponent<Lightsaber_grab_interacteble>();
+        sourceprincipale = gameObject.AddComponent<AudioSource>();
+        sourcesecondaire = gameObject.AddComponent<AudioSource>();
+        sourceprincipale.spatialBlend = 1 ;
+        sourcesecondaire.spatialBlend = 1 ;
         foreach (Blade blade in blades) {
             blade.Showblade(false);
         }
@@ -51,14 +55,16 @@ public class Lightsaber : MonoBehaviour
                 }
                 
             }
-            Debug.Log(rb.velocity);
-            if (rb.velocity.magnitude > 6)
+            Vector3 velocity = lightsaber_Grab_Interacteble.GetVelocity();
+
+            //Debug.Log(velocity);
+            if (!sourcesecondaire.isPlaying && velocity.magnitude > 6)
             {
-                source.PlayOneShot(moving);
+                sourcesecondaire.PlayOneShot(moving);
             }
-            else if (!source.isPlaying)
+            else if (!sourceprincipale.isPlaying)
             {
-                source.PlayOneShot(hum);
+                sourceprincipale.PlayOneShot(hum);
             }
             
         }
@@ -74,8 +80,14 @@ public class Lightsaber : MonoBehaviour
                 if (blade.blade.transform.localScale.y <= 0)
                 {
                     blade.Showblade(false);
+                    sourceprincipale.Stop();
                 }
             }
         }
+    }
+
+    internal void Deflect()
+    {
+        sourceprincipale.PlayOneShot(DeflectSound[Random.Range(0,3)]);
     }
 }
