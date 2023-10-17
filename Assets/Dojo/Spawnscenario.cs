@@ -35,16 +35,24 @@ public class Spawnscenario : MonoBehaviour
     public SplineComputer circlepath;
 
 
+    public int bullet_received;
+    // nombre de balles pouvant atteindre 
+    // le joueur avant de relancer la partie
+    private int admissible_bullets; 
+
     // Start is called before the first frame update
     void Start()
     {
         difficultyset = false;
         waitBeforSpawn = 0;
         numofmark = 0;
+        pointsDeVie
+
+        bullet_received = 0;
+        admissible_bullets = 5;
+
         source = gameObject.AddComponent<AudioSource>();
         source.spatialBlend = 1;
-
-
     }
 
     // Update is called once per frame
@@ -68,8 +76,14 @@ public class Spawnscenario : MonoBehaviour
             Win();
         }
 
+        if(bullet_received >= admissible_bullets) {
+            Debug.Log("Looooser");
+            RestartGame();
+        }
+
 
         if (player_placed) {
+            Debug.Log("Placeeee");
             playzone.SetActive(true);
             if (!soundplayed) { source.PlayOneShot(sound_zone); soundplayed = true; }
             
@@ -114,4 +128,21 @@ public class Spawnscenario : MonoBehaviour
         newmark.GetComponent<MarkAI>().circlepath = circlepath;
         totalMark++;
         }
+
+    private void RestartGame()
+    {
+        bullet_received = 0;
+        totalMark = 0;
+
+
+        foreach (GameObject mark in GameObject.FindGameObjectsWithTag("Marksman")) {
+            Destroy(mark);
+        }
+        player_placed = false;
+        playzone.SetActive(false);
+        difficultyset = false;
+        placemarker.SetActive(false);
+
+        waitBeforSpawn = initialSpawnTimeInterval;
+    }
 }
