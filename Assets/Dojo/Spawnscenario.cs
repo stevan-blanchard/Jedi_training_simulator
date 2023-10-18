@@ -30,6 +30,7 @@ public class Spawnscenario : MonoBehaviour
 
     private AudioSource source;
     public AudioClip sound_zone;
+    public AudioClip loseclip;
     private bool soundplayed;
 
     public SplineComputer circlepath;
@@ -48,7 +49,7 @@ public class Spawnscenario : MonoBehaviour
         numofmark = 0;
 
         bullet_received = 0;
-        admissible_bullets = 5;
+        admissible_bullets = 3;
 
         source = gameObject.AddComponent<AudioSource>();
         source.spatialBlend = 1;
@@ -77,6 +78,7 @@ public class Spawnscenario : MonoBehaviour
 
         if(bullet_received >= admissible_bullets) {
             Debug.Log("Looooser");
+            if (!soundplayed) { source.PlayOneShot(loseclip); soundplayed = true; }
             RestartGame();
         }
 
@@ -105,10 +107,7 @@ public class Spawnscenario : MonoBehaviour
 
     private void Win()
     {
-        player_placed = false;
-        difficultyset = false;
-        playzone.SetActive(false);
-        soundplayed = false;
+        RestartGame();
     }
 
     public void InitialiseDificulty(int dificulty)
@@ -142,5 +141,11 @@ public class Spawnscenario : MonoBehaviour
         placemarker.SetActive(false);
 
         waitBeforSpawn = initialSpawnTimeInterval;
+        soundplayed = false;
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 }
